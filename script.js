@@ -56,11 +56,7 @@ app.controller('MainController', function($scope, $cookies, $location) {
   };
   $scope.checkIfLoggedIn = checkIfLoggedIn;
   function checkIfLoggedIn() {
-      if($cookies.get('token')) {
-        return true;
-      } else {
-        return false;
-      }
+      return $cookies.get('token');
   }
 });
 
@@ -94,11 +90,7 @@ app.controller('OptionsController', function($scope, grindOps, $location, postOr
     };
     $location.path('/payment');
   };
-  // $scope.payOrder = function() {
-  //   postOrder.submit();
-  //   console.log('payment made');
-  //   $location.path('/thanks');
-  // };
+
   $scope.checkIfLoggedIn = checkIfLoggedIn;
   function checkIfLoggedIn() {
     if($cookies.get('token')) {
@@ -127,7 +119,7 @@ app.controller('OptionsController', function($scope, grindOps, $location, postOr
         // This is the token representing the validated credit card
         var tokenId = token.id;
         $http({
-          url: 'http://localhost:8080/charge',
+          url: 'http://localhost:8000/charge',
           method: 'POST',
           data: {
             amount: amount,
@@ -150,8 +142,8 @@ app.controller('OptionsController', function($scope, grindOps, $location, postOr
     // with a form with it to prompt for credit card
     // information from the user
     handler.open({
-      name: 'Debugschool',
-      description: '2 widgets',
+      name: 'DC Roasters',
+      description: 'coffee subsctiption',
       amount: amount
     });
   };
@@ -194,7 +186,7 @@ app.factory('grindOps', function($http) {
   return {
     getGrindOptions: function(callback) {
       $http({
-        url: "http://localhost:8080/options"
+        url: "http://localhost:8000/options"
       }).success(function(data) {
         callback(data);
       });
@@ -212,7 +204,7 @@ app.factory('postOrder', function($http, $cookies) {
         stripeToken: tokenId
       };
       console.log('data from post order factory', data);
-      $http.post('http://localhost:8080/orders', data)
+      $http.post('http://localhost:8000/orders', data)
         .success(function(data, status) {
           console.log('data: ', data);
           console.log('status code: ', status);
@@ -225,7 +217,7 @@ app.factory('postOrder', function($http, $cookies) {
 app.factory('postUser', function($http) {
   return {
     saveUserInfo: function(user) {
-      $http.post('http://localhost:8080/signup', user)
+      $http.post('http://localhost:8000/signup', user)
       .success(function(data, status) {
         console.log('data', data);
         console.log('status code: ', status);
@@ -237,7 +229,7 @@ app.factory('postUser', function($http) {
 app.factory('postLogin', function($http, $cookies) {
   return {
     loginUser: function(user) {
-      return $http.post('http://localhost:8080/login', user);
+      return $http.post('http://localhost:8000/login', user);
       // .success(function(data, status) {
       //   $cookies.put('token', data.token);
       //   console.log(data, status);
